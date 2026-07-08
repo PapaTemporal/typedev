@@ -14,7 +14,10 @@ export interface Settings {
 	board: string;
 	/** Named boards built in the key editor (name → serialized KeyboardGeometry). */
 	savedBoards: Record<string, string>;
+	/** Show the on-screen keyboard during practice (see the layout). */
 	showKeyboard: boolean;
+	/** Highlight the next key to press (aid on top of the visible keyboard). */
+	showNextKey: boolean;
 	showFingers: boolean;
 	showHeatmap: boolean;
 	mustCorrect: boolean;
@@ -24,6 +27,7 @@ const DEFAULTS: Settings = {
 	board: 'ansi',
 	savedBoards: {},
 	showKeyboard: false,
+	showNextKey: false,
 	showFingers: false,
 	showHeatmap: false,
 	mustCorrect: false
@@ -55,6 +59,10 @@ function load(): Settings {
 		// A board reference with no matching save (deleted/lost) falls back to ANSI.
 		if (s.board.startsWith('saved:') && !s.savedBoards[s.board.slice('saved:'.length)]) {
 			s.board = 'ansi';
+		}
+		// showKeyboard used to imply next-key highlighting; keep that for old saves.
+		if (stored.showNextKey === undefined && stored.showKeyboard) {
+			s.showNextKey = true;
 		}
 		return s;
 	} catch {

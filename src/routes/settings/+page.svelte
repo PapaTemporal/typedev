@@ -1,40 +1,46 @@
 <script lang="ts">
-	import { settings } from '$lib/settings.svelte';
-	import type { PageProps } from './$types';
+	import { settings } from "$lib/settings.svelte";
+	import type { PageProps } from "./$types";
 
 	let { form }: PageProps = $props();
 
-	const toggles: { key: 'showKeyboard' | 'showFingers' | 'showHeatmap' | 'mustCorrect'; label: string; description: string }[] = [
+	const toggles: {
+		key: "showKeyboard" | "showNextKey" | "showFingers" | "showHeatmap" | "mustCorrect";
+		label: string;
+		description: string;
+	}[] = [
 		{
-			key: 'showKeyboard',
-			label: 'On-screen keyboard',
-			description: 'Show the keyboard during practice and highlight the next key to press.'
+			key: "showKeyboard",
+			label: "Show keyboard",
+			description:
+				"Display the on-screen keyboard during practice so you can see the key layout.",
 		},
 		{
-			key: 'showFingers',
-			label: 'Finger guidance',
-			description: 'Color keys by which finger should press them.'
+			key: "showNextKey",
+			label: "Show next key",
+			description:
+				"Highlight the key to press next (and the layer key to hold) on the visible keyboard.",
 		},
 		{
-			key: 'showHeatmap',
-			label: 'Error heatmap',
-			description: 'Shade keys red based on how often you miss them.'
+			key: "showFingers",
+			label: "Finger guidance",
+			description: "Color keys by which finger should press them.",
 		},
 		{
-			key: 'mustCorrect',
-			label: 'Must correct errors',
-			description: 'A wrong keystroke stays put until you type the right character.'
-		}
+			key: "showHeatmap",
+			label: "Error heatmap",
+			description: "Shade keys red based on how often you miss them.",
+		},
+		{
+			key: "mustCorrect",
+			label: "Must correct errors",
+			description:
+				"A wrong keystroke stays put until you type the right character.",
+		},
 	];
 </script>
 
 <h1 class="mb-8 text-2xl font-bold">Settings</h1>
-
-<p class="mb-8 text-sm text-zinc-500">
-	Your keyboard — its shape, character layout, and input mode — is defined per board in the
-	<a href="/editor" class="text-emerald-400 underline hover:text-emerald-300">key editor</a>
-	and selected in the header.
-</p>
 
 <section class="mb-8">
 	<h2 class="mb-4 text-lg font-semibold">Practice aids</h2>
@@ -49,8 +55,12 @@
 					class="mt-1 accent-emerald-500"
 				/>
 				<span>
-					<span class="block font-medium text-zinc-200">{toggle.label}</span>
-					<span class="block text-sm text-zinc-500">{toggle.description}</span>
+					<span class="block font-medium text-zinc-200"
+						>{toggle.label}</span
+					>
+					<span class="block text-sm text-zinc-500"
+						>{toggle.description}</span
+					>
 				</span>
 			</label>
 		{/each}
@@ -60,10 +70,13 @@
 <section>
 	<h2 class="mb-1 text-lg font-semibold">Maintenance</h2>
 	<p class="mb-4 text-sm text-zinc-500">
-		Rebuild the library from the files in <code class="font-mono text-xs">content/</code> — use
-		this if <code class="font-mono text-xs">data/typing.db</code> was deleted or after adding
-		content files. Your stats and progress are kept. (If you deleted the database file while the
-		app was running, restart the dev server first.)
+		Rebuild the library from the files in <code class="font-mono text-xs"
+			>content/</code
+		>
+		— use this if <code class="font-mono text-xs">data/typing.db</code> was deleted
+		or after adding content files. Your stats and progress are kept. (If you
+		deleted the database file while the app was running, restart the dev server
+		first.)
 	</p>
 	<form method="POST" action="?/seed" class="flex items-center gap-3">
 		<button
@@ -72,11 +85,11 @@
 		>
 			Re-seed library
 		</button>
-		{#if form && 'seeded' in form}
+		{#if form && "seeded" in form}
 			<span class="text-sm text-emerald-400">
 				Seeded {form.seeded} items ({form.pages} pages).
 			</span>
-		{:else if form && 'error' in form && form.error}
+		{:else if form && "error" in form && form.error}
 			<span class="text-sm text-red-400">{form.error}</span>
 		{/if}
 	</form>

@@ -33,11 +33,12 @@
 		new TypingEngine(text, { mustCorrect: settings.mustCorrect }),
 	);
 
-	const showKeyboardPanel = $derived(
-		settings.showKeyboard || settings.showFingers || settings.showHeatmap,
-	);
+	// The keyboard is shown only when the user wants to see it; next-key
+	// highlighting is a separate aid layered on top of the visible keyboard.
+	const showKeyboardPanel = $derived(settings.showKeyboard);
 	const expectedChar = $derived(
 		!settings.showKeyboard ||
+			!settings.showNextKey ||
 			engine.finished ||
 			engine.pos >= engine.typeable.length
 			? null

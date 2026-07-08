@@ -1,9 +1,11 @@
 import { and, asc, eq } from 'drizzle-orm';
 import { nanoid } from 'nanoid';
+import { cleanGutenberg } from '$lib/typing/gutenberg';
 import { normalize, unwrapParagraphs } from '$lib/typing/normalize';
 import { paginate } from '$lib/typing/paginate';
 import { db } from './db';
 import { contents, pages, progress } from './db/schema';
+import { slugify } from './gutenberg';
 
 export interface LibraryItem {
 	id: string;
@@ -66,6 +68,52 @@ export async function createCustomContent(input: CustomContentInput): Promise<st
 		pageCount: pageTexts.length,
 		createdAt: Date.now()
 	});
+	for (let i = 0; i < pageTexts.length; i += 100) {
+		await db.insert(pages).values(
+			pageTexts.slice(i, i + 100).map((pageText, j) => ({
+				contentId: id,
+				pageIndex: i + j,
+				text: pageText
+			}))
+		);
+	}
+	return id;
+}
+
+export interface ImportedBookInput {
+	title: string;
+	author?: string | null;
+	source?: string | null;
+	rawText: string;
+}
+
+/**
+ * Store a downloaded book in the library (kind 'book'). Re-importing the same
+ * title replaces its pages. Returns the content id.
+ */
+export async function createBookContent(input: ImportedBookInput): Promise<string> {
+	const text = unwrapParagraphs(normalize(cleanGutenberg(input.rawText)));
+	const pageTexts = paginate(text, 'prose');
+	if (pageTexts.length < 2) {
+		throw new Error('That file has almost no typeable text after cleanup.');
+	}
+	const id = `books/${slugify(input.title) || nanoid(8)}`;
+	const row = {
+		kind: 'book' as const,
+		title: input.title,
+		language: null,
+		difficulty: 1,
+		source: input.source ?? null,
+		license: 'Public Domain',
+		author: input.author ?? null,
+		pageCount: pageTexts.length,
+		createdAt: Date.now()
+	};
+	await db
+		.insert(contents)
+		.values({ id, ...row })
+		.onConflictDoUpdate({ target: contents.id, set: row });
+	await db.delete(pages).where(eq(pages.contentId, id));
 	for (let i = 0; i < pageTexts.length; i += 100) {
 		await db.insert(pages).values(
 			pageTexts.slice(i, i + 100).map((pageText, j) => ({

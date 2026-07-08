@@ -3,7 +3,6 @@
 	import {
 		boardLayers,
 		codeOnLayer,
-		parseBoard,
 		serializeBoard,
 	} from "$lib/layouts/board";
 	import {
@@ -25,23 +24,38 @@
 		return JSON.parse(JSON.stringify(g));
 	}
 
-	function startingBoard(): KeyboardGeometry {
-		// Start from whatever board is active in the header selector.
-		return clone(resolveBoard(settings.board, settings.savedBoards));
+	function defaultName(boardId: string): string {
+		if (boardId.startsWith("saved:")) return boardId.slice("saved:".length);
+		return GEOMETRIES[boardId]?.label ?? "My board";
 	}
 
-	let board = $state(startingBoard());
-	let boardName = $state(
-		settings.board.startsWith("saved:")
-			? settings.board.slice("saved:".length)
-			: "My board",
-	);
+	// The editor always edits the keyboard selected in the header. Presets load
+	// as a starting point and become a named saved board on Save.
+	// svelte-ignore state_referenced_locally
+	let board = $state(clone(resolveBoard(settings.board, settings.savedBoards)));
+	// svelte-ignore state_referenced_locally
+	let boardName = $state(defaultName(settings.board));
+	let loadedFrom = settings.board;
 	let selected = $state<number | null>(null);
 	let editLayer = $state(0);
 	let listening = $state(false);
 	let savedFlash = $state(false);
 	let kleDraft = $state("");
 	let kleError = $state("");
+
+	// Switching the header selector (or clicking a saved-board chip) reloads
+	// the canvas with that keyboard.
+	$effect(() => {
+		if (settings.board !== loadedFrom) {
+			board = clone(resolveBoard(settings.board, settings.savedBoards));
+			boardName = defaultName(settings.board);
+			loadedFrom = settings.board;
+			selected = null;
+			editLayer = 0;
+			pendingModifier = null;
+			listening = false;
+		}
+	});
 
 	const layers = $derived(boardLayers(board));
 	const selectedKey = $derived(
@@ -298,24 +312,6 @@
 		selected = null;
 	}
 
-	function loadPreset(id: string) {
-		if (id.startsWith("saved:")) {
-			const name = id.slice("saved:".length);
-			const json = settings.savedBoards[name];
-			if (!json) return;
-			try {
-				board = parseBoard(json);
-				boardName = name;
-			} catch {
-				return;
-			}
-		} else if (GEOMETRIES[id]) {
-			board = clone(GEOMETRIES[id]);
-		}
-		selected = null;
-		editLayer = 0;
-	}
-
 	function addLayer() {
 		editLayer = Math.max(...layers) + 1;
 	}
@@ -328,7 +324,9 @@
 			...settings.savedBoards,
 			[name]: serializeBoard(board),
 		};
-		settings.board = `saved:${name}`; // becomes the active board in the header
+		// Saving keeps this board active in the header without reloading the canvas.
+		loadedFrom = `saved:${name}`;
+		settings.board = loadedFrom;
 		boardName = name;
 		savedFlash = true;
 		setTimeout(() => (savedFlash = false), 1500);
@@ -366,32 +364,26 @@
 <div class="mb-4 flex items-center justify-between">
 	<h1 class="text-2xl font-bold">Key editor</h1>
 	<div class="flex items-center gap-2">
-		<select
-			onchange={(e) => loadPreset(e.currentTarget.value)}
-			class="rounded-md border border-zinc-700 bg-zinc-900 px-3 py-2 text-sm text-zinc-300"
-		>
-			<option value="">Load…</option>
-			{#each Object.values(GEOMETRIES) as g (g.id)}
-				<option value={g.id}>{g.label}</option>
-			{/each}
-			{#each Object.keys(settings.savedBoards) as name (name)}
-				<option value={`saved:${name}`}>Saved: {name}</option>
-			{/each}
-		</select>
 		<input
 			type="text"
 			bind:value={boardName}
 			placeholder="Board name"
-			class="w-36 rounded-md border border-zinc-700 bg-zinc-900 px-3 py-2 text-sm text-zinc-100 placeholder:text-zinc-600 focus:border-emerald-500 focus:outline-none"
+			class="w-44 rounded-md border border-zinc-700 bg-zinc-900 px-3 py-2 text-sm text-zinc-100 placeholder:text-zinc-600 focus:border-emerald-500 focus:outline-none"
 		/>
 		<button
 			onclick={save}
 			class="rounded-md bg-emerald-600 px-4 py-2 text-sm font-medium text-white hover:bg-emerald-500"
 		>
-			{savedFlash ? "Saved ✓" : "Save & use"}
+			{savedFlash ? "Saved ✓" : "Save"}
 		</button>
 	</div>
 </div>
+
+<p class="mb-2 text-sm text-zinc-500">
+	Editing <b class="text-zinc-300">{defaultName(settings.board)}</b> — the keyboard selected in
+	the header. Pick a preset there to use it as a starting point; saving stores it under the name
+	above and keeps it active.
+</p>
 
 <p class="mb-4 text-sm text-zinc-500">
 	Select a key, drag it into place, and use <b>Bind</b> to assign the keycode it
@@ -655,7 +647,7 @@
 						: 'border-zinc-700'}"
 				>
 					<button
-						onclick={() => loadPreset(`saved:${name}`)}
+						onclick={() => (settings.board = `saved:${name}`)}
 						class="px-3 py-1.5 text-sm {settings.board ===
 						`saved:${name}`
 							? 'text-emerald-300'

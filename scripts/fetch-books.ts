@@ -7,6 +7,7 @@
  */
 import { existsSync, readFileSync, writeFileSync } from 'node:fs';
 import path from 'node:path';
+import { fetchGutenbergText, slugify, stripBoilerplate } from '../src/lib/server/gutenberg';
 
 interface Book {
 	id: number;
@@ -37,54 +38,8 @@ const STARTER_LIST: Book[] = [
 	{ id: 43, title: 'The Strange Case of Dr. Jekyll and Mr. Hyde', author: 'Robert Louis Stevenson' }
 ];
 
-const MIRRORS = [
-	(id: number) => `https://www.gutenberg.org/cache/epub/${id}/pg${id}.txt`,
-	(id: number) => `https://gutenberg.pglaf.org/cache/epub/${id}/pg${id}.txt`,
-	(id: number) => `https://gutenberg.readingroo.ms/cache/epub/${id}/pg${id}.txt`
-];
-
 const BOOKS_DIR = 'content/books';
 const MANIFEST_PATH = path.join(BOOKS_DIR, 'manifest.json');
-
-async function fetchBook(id: number): Promise<string> {
-	let lastError = 'no mirror tried';
-	for (const mirror of MIRRORS) {
-		const url = mirror(id);
-		try {
-			const res = await fetch(url, { signal: AbortSignal.timeout(30000) });
-			if (!res.ok) {
-				lastError = `${url} → ${res.status}`;
-				continue;
-			}
-			return await res.text();
-		} catch (e) {
-			lastError = `${url} → ${e instanceof Error ? e.message : 'failed'}`;
-		}
-	}
-	throw new Error(lastError);
-}
-
-/** Cut the Gutenberg license header/footer, keeping only the book body. */
-function stripBoilerplate(raw: string): string {
-	const lines = raw.split(/\r?\n/);
-	let start = 0;
-	let end = lines.length;
-	for (let i = 0; i < lines.length; i++) {
-		if (/^\s*\*{3}\s*START OF/i.test(lines[i])) start = i + 1;
-		if (/^\s*\*{3}\s*END OF/i.test(lines[i])) {
-			end = i;
-			break;
-		}
-	}
-	return lines.slice(start, end).join('\n').trim();
-}
-
-function slugify(title: string): string {
-	return title
-		.toLowerCase()
-		.replace(/[^a-z0-9]+/g, '-')
-		.replace(/^-|-$/g, '');
-}
 
 interface ManifestEntry {
 	file: string;
@@ -111,7 +66,7 @@ for (const book of books) {
 		continue;
 	}
 	try {
-		const raw = await fetchBook(book.id);
+		const raw = await fetchGutenbergText(book.id);
 		const body = stripBoilerplate(raw);
 		if (body.length < 5000) throw new Error(`suspiciously short (${body.length} chars)`);
 		writeFileSync(filePath, body);
