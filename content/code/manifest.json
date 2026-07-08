@@ -1,0 +1,110 @@
+[
+	{
+		"file": "typescript/zod-types.ts",
+		"title": "Zod — types.ts",
+		"language": "typescript",
+		"difficulty": 1,
+		"source": "https://github.com/colinhacks/zod/blob/v3/src/types.ts",
+		"license": "MIT",
+		"author": "Colin McDonnell"
+	},
+	{
+		"file": "typescript/ms-index.ts",
+		"title": "ms — index.ts",
+		"language": "typescript",
+		"difficulty": 1,
+		"source": "https://github.com/vercel/ms/blob/main/src/index.ts",
+		"license": "MIT",
+		"author": "Vercel"
+	},
+	{
+		"file": "javascript/p-limit-index.js",
+		"title": "p-limit — index.js",
+		"language": "javascript",
+		"difficulty": 1,
+		"source": "https://github.com/sindresorhus/p-limit/blob/main/index.js",
+		"license": "MIT",
+		"author": "Sindre Sorhus"
+	},
+	{
+		"file": "javascript/express-view.js",
+		"title": "Express — view.js",
+		"language": "javascript",
+		"difficulty": 1,
+		"source": "https://github.com/expressjs/express/blob/master/lib/view.js",
+		"license": "MIT",
+		"author": "Express contributors"
+	},
+	{
+		"file": "python/requests-api.py",
+		"title": "Requests — api.py",
+		"language": "python",
+		"difficulty": 1,
+		"source": "https://github.com/psf/requests/blob/main/src/requests/api.py",
+		"license": "Apache-2.0",
+		"author": "Python Software Foundation"
+	},
+	{
+		"file": "python/flask-globals.py",
+		"title": "Flask — globals.py",
+		"language": "python",
+		"difficulty": 1,
+		"source": "https://github.com/pallets/flask/blob/main/src/flask/globals.py",
+		"license": "BSD-3-Clause",
+		"author": "Pallets"
+	},
+	{
+		"file": "go/gin-auth.go",
+		"title": "Gin — auth.go",
+		"language": "go",
+		"difficulty": 1,
+		"source": "https://github.com/gin-gonic/gin/blob/master/auth.go",
+		"license": "MIT",
+		"author": "Gin contributors"
+	},
+	{
+		"file": "go/cobra-args.go",
+		"title": "Cobra — args.go",
+		"language": "go",
+		"difficulty": 1,
+		"source": "https://github.com/spf13/cobra/blob/main/args.go",
+		"license": "Apache-2.0",
+		"author": "Steve Francia"
+	},
+	{
+		"file": "rust/globset-glob.rs",
+		"title": "globset — glob.rs",
+		"language": "rust",
+		"difficulty": 3,
+		"source": "https://github.com/BurntSushi/ripgrep/blob/master/crates/globset/src/glob.rs",
+		"license": "MIT",
+		"author": "Andrew Gallant"
+	},
+	{
+		"file": "rust/tokio-oneshot.rs",
+		"title": "Tokio — oneshot.rs",
+		"language": "rust",
+		"difficulty": 3,
+		"source": "https://github.com/tokio-rs/tokio/blob/master/tokio/src/sync/oneshot.rs",
+		"license": "MIT",
+		"author": "Tokio contributors"
+	},
+	{
+		"file": "c/redis-adlist.c",
+		"title": "Redis — adlist.c",
+		"language": "c",
+		"difficulty": 3,
+		"source": "https://github.com/redis/redis/blob/unstable/src/adlist.c",
+		"license": "RSALv2/SSPLv1",
+		"author": "Redis Ltd."
+	},
+	{
+		"file": "cpp/spdlog.cpp",
+		"title": "spdlog — spdlog.cpp",
+		"language": "cpp",
+		"difficulty": 3,
+		"source": "https://github.com/gabime/spdlog/blob/v1.x/src/spdlog.cpp",
+		"license": "MIT",
+		"author": "Gabi Melman"
+	}
+]

@@ -1,0 +1,178 @@
+[
+	{
+		"file": "a-tale-of-two-cities.txt",
+		"title": "A Tale of Two Cities",
+		"difficulty": 1,
+		"source": "https://www.gutenberg.org/ebooks/98",
+		"license": "Public Domain",
+		"author": "Charles Dickens"
+	},
+	{
+		"file": "adventures-of-huckleberry-finn.txt",
+		"title": "Adventures of Huckleberry Finn",
+		"difficulty": 1,
+		"source": "https://www.gutenberg.org/ebooks/76",
+		"license": "Public Domain",
+		"author": "Mark Twain"
+	},
+	{
+		"file": "alice-in-wonderland.txt",
+		"title": "Alice in Wonderland",
+		"difficulty": 1,
+		"source": "https://www.gutenberg.org/ebooks/11",
+		"license": "Public Domain",
+		"author": "Lewis Carroll"
+	},
+	{
+		"file": "alice-ch1.txt",
+		"title": "Alice in Wonderland — Chapter I",
+		"difficulty": 1,
+		"source": "https://www.gutenberg.org/ebooks/11",
+		"license": "Public Domain",
+		"author": "Lewis Carroll"
+	},
+	{
+		"file": "dracula.txt",
+		"title": "Dracula",
+		"difficulty": 1,
+		"source": "https://www.gutenberg.org/ebooks/345",
+		"license": "Public Domain",
+		"author": "Bram Stoker"
+	},
+	{
+		"file": "frankenstein.txt",
+		"title": "Frankenstein",
+		"difficulty": 1,
+		"source": "https://www.gutenberg.org/ebooks/84",
+		"license": "Public Domain",
+		"author": "Mary Shelley"
+	},
+	{
+		"file": "great-expectations.txt",
+		"title": "Great Expectations",
+		"difficulty": 1,
+		"source": "https://www.gutenberg.org/ebooks/1400",
+		"license": "Public Domain",
+		"author": "Charles Dickens"
+	},
+	{
+		"file": "jane-eyre.txt",
+		"title": "Jane Eyre",
+		"difficulty": 1,
+		"source": "https://www.gutenberg.org/ebooks/1260",
+		"license": "Public Domain",
+		"author": "Charlotte Brontë"
+	},
+	{
+		"file": "metamorphosis.txt",
+		"title": "Metamorphosis",
+		"difficulty": 1,
+		"source": "https://www.gutenberg.org/ebooks/5200",
+		"license": "Public Domain",
+		"author": "Franz Kafka"
+	},
+	{
+		"file": "moby-dick.txt",
+		"title": "Moby Dick",
+		"difficulty": 1,
+		"source": "https://www.gutenberg.org/ebooks/2701",
+		"license": "Public Domain",
+		"author": "Herman Melville"
+	},
+	{
+		"file": "peter-pan.txt",
+		"title": "Peter Pan",
+		"difficulty": 1,
+		"source": "https://www.gutenberg.org/ebooks/16",
+		"license": "Public Domain",
+		"author": "J. M. Barrie"
+	},
+	{
+		"file": "pride-and-prejudice.txt",
+		"title": "Pride and Prejudice",
+		"difficulty": 1,
+		"source": "https://www.gutenberg.org/ebooks/1342",
+		"license": "Public Domain",
+		"author": "Jane Austen"
+	},
+	{
+		"file": "pride-and-prejudice-ch1.txt",
+		"title": "Pride and Prejudice — Chapter 1",
+		"difficulty": 1,
+		"source": "https://www.gutenberg.org/ebooks/1342",
+		"license": "Public Domain",
+		"author": "Jane Austen"
+	},
+	{
+		"file": "the-adventures-of-sherlock-holmes.txt",
+		"title": "The Adventures of Sherlock Holmes",
+		"difficulty": 1,
+		"source": "https://www.gutenberg.org/ebooks/1661",
+		"license": "Public Domain",
+		"author": "Arthur Conan Doyle"
+	},
+	{
+		"file": "the-adventures-of-tom-sawyer.txt",
+		"title": "The Adventures of Tom Sawyer",
+		"difficulty": 1,
+		"source": "https://www.gutenberg.org/ebooks/74",
+		"license": "Public Domain",
+		"author": "Mark Twain"
+	},
+	{
+		"file": "the-picture-of-dorian-gray.txt",
+		"title": "The Picture of Dorian Gray",
+		"difficulty": 1,
+		"source": "https://www.gutenberg.org/ebooks/174",
+		"license": "Public Domain",
+		"author": "Oscar Wilde"
+	},
+	{
+		"file": "the-strange-case-of-dr-jekyll-and-mr-hyde.txt",
+		"title": "The Strange Case of Dr. Jekyll and Mr. Hyde",
+		"difficulty": 1,
+		"source": "https://www.gutenberg.org/ebooks/43",
+		"license": "Public Domain",
+		"author": "Robert Louis Stevenson"
+	},
+	{
+		"file": "the-time-machine.txt",
+		"title": "The Time Machine",
+		"difficulty": 1,
+		"source": "https://www.gutenberg.org/ebooks/35",
+		"license": "Public Domain",
+		"author": "H. G. Wells"
+	},
+	{
+		"file": "the-war-of-the-worlds.txt",
+		"title": "The War of the Worlds",
+		"difficulty": 1,
+		"source": "https://www.gutenberg.org/ebooks/36",
+		"license": "Public Domain",
+		"author": "H. G. Wells"
+	},
+	{
+		"file": "the-wonderful-wizard-of-oz.txt",
+		"title": "The Wonderful Wizard of Oz",
+		"difficulty": 1,
+		"source": "https://www.gutenberg.org/ebooks/55",
+		"license": "Public Domain",
+		"author": "L. Frank Baum"
+	},
+	{
+		"file": "treasure-island.txt",
+		"title": "Treasure Island",
+		"difficulty": 1,
+		"source": "https://www.gutenberg.org/ebooks/120",
+		"license": "Public Domain",
+		"author": "Robert Louis Stevenson"
+	},
+	{
+		"file": "wuthering-heights.txt",
+		"title": "Wuthering Heights",
+		"difficulty": 1,
+		"source": "https://www.gutenberg.org/ebooks/768",
+		"license": "Public Domain",
+		"author": "Emily Brontë"
+	}
+]
