@@ -53,6 +53,20 @@ Drop a file under `content/code/<language>/` or `content/books/`, add an entry t
 `manifest.json` (title, language, difficulty, source, license, author), and run `pnpm seed`.
 Re-seeding is idempotent.
 
+## Hosting on GitHub Pages
+
+The app has two build targets:
+
+- **Local (default)**: SvelteKit + adapter-node with SQLite — full server, cross-device stats.
+- **Static (`pnpm build:static`)**: adapter-static SPA for GitHub Pages — the library is baked
+  into JSON at build time (`pnpm bake` → `static/data/`), and stats/progress/imports live in the
+  browser's localStorage instead of SQLite. Imports run client-side (Gutendex and GitHub raw both
+  allow CORS; Gutenberg mirrors fall back to a CORS proxy).
+
+`.github/workflows/deploy.yml` builds and deploys the static target on every push to `main`.
+One-time setup: repo **Settings → Pages → Source: GitHub Actions**. The site lands at
+`https://<user>.github.io/<repo>/` (the workflow sets `BASE_PATH` from the repo name).
+
 ## Scripts
 
 | Command            | What it does                              |
@@ -64,6 +78,7 @@ Re-seeding is idempotent.
 | `pnpm books [id…]` | download Gutenberg books into `content/`  |
 | `pnpm db:generate` | generate Drizzle migrations               |
 | `pnpm build`       | production build (adapter-node)           |
+| `pnpm build:static`| bake content + static SPA build (Pages)   |
 
 ## Content licenses
 

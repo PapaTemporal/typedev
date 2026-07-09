@@ -1,8 +1,25 @@
 <script lang="ts">
+	import { api } from "$lib/data";
 	import { settings } from "$lib/settings.svelte";
-	import type { PageProps } from "./$types";
+	import { STATIC_MODE } from "$lib/static-mode";
 
-	let { form }: PageProps = $props();
+	let seedMessage = $state("");
+	let seedError = $state("");
+	let seeding = $state(false);
+
+	async function reseed() {
+		seeding = true;
+		seedMessage = "";
+		seedError = "";
+		try {
+			const r = await api.reseed(fetch);
+			seedMessage = `Seeded ${r.seeded} items (${r.pages} pages).`;
+		} catch (e) {
+			seedError = e instanceof Error ? e.message : "Seeding failed.";
+		} finally {
+			seeding = false;
+		}
+	}
 
 	const toggles: {
 		key: "showKeyboard" | "showNextKey" | "showFingers" | "showHeatmap" | "mustCorrect";
@@ -67,30 +84,31 @@
 	</div>
 </section>
 
-<section>
-	<h2 class="mb-1 text-lg font-semibold">Maintenance</h2>
-	<p class="mb-4 text-sm text-zinc-500">
-		Rebuild the library from the files in <code class="font-mono text-xs"
-			>content/</code
-		>
-		— use this if <code class="font-mono text-xs">data/typing.db</code> was deleted
-		or after adding content files. Your stats and progress are kept. (If you
-		deleted the database file while the app was running, restart the dev server
-		first.)
-	</p>
-	<form method="POST" action="?/seed" class="flex items-center gap-3">
-		<button
-			type="submit"
-			class="rounded-md bg-emerald-600 px-4 py-2 text-sm font-medium text-white hover:bg-emerald-500"
-		>
-			Re-seed library
-		</button>
-		{#if form && "seeded" in form}
-			<span class="text-sm text-emerald-400">
-				Seeded {form.seeded} items ({form.pages} pages).
-			</span>
-		{:else if form && "error" in form && form.error}
-			<span class="text-sm text-red-400">{form.error}</span>
-		{/if}
-	</form>
-</section>
+{#if !STATIC_MODE}
+	<section>
+		<h2 class="mb-1 text-lg font-semibold">Maintenance</h2>
+		<p class="mb-4 text-sm text-zinc-500">
+			Rebuild the library from the files in <code class="font-mono text-xs"
+				>content/</code
+			>
+			— use this if <code class="font-mono text-xs">data/typing.db</code> was deleted
+			or after adding content files. Your stats and progress are kept. (If you
+			deleted the database file while the app was running, restart the dev server
+			first.)
+		</p>
+		<div class="flex items-center gap-3">
+			<button
+				onclick={reseed}
+				disabled={seeding}
+				class="rounded-md bg-emerald-600 px-4 py-2 text-sm font-medium text-white hover:bg-emerald-500 disabled:opacity-50"
+			>
+				{seeding ? "Seeding…" : "Re-seed library"}
+			</button>
+			{#if seedMessage}
+				<span class="text-sm text-emerald-400">{seedMessage}</span>
+			{:else if seedError}
+				<span class="text-sm text-red-400">{seedError}</span>
+			{/if}
+		</div>
+	</section>
+{/if}

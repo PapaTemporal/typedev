@@ -1,6 +1,7 @@
 <script lang="ts">
 	import './layout.css';
 	import favicon from '$lib/assets/favicon.svg';
+	import { base } from '$app/paths';
 	import { page } from '$app/state';
 	import { GEOMETRIES } from '$lib/layouts';
 	import { persistSettings, settings } from '$lib/settings.svelte';
@@ -27,12 +28,13 @@
 <div class="min-h-screen bg-zinc-950 text-zinc-200">
 	<header class="border-b border-zinc-800">
 		<nav class="mx-auto flex max-w-4xl items-center gap-6 px-4 py-3">
-			<a href="/" class="font-mono text-lg font-bold text-emerald-400">typelit-dev</a>
+			<a href="{base}/" class="font-mono text-lg font-bold text-emerald-400">typelit-dev</a>
 			<div class="flex gap-4 text-sm">
 				{#each links as link (link.href)}
 					<a
-						href={link.href}
-						class="transition-colors hover:text-white {page.url.pathname === link.href
+						href="{base}{link.href}"
+						class="transition-colors hover:text-white {page.url.pathname ===
+						`${base}${link.href}` || (link.href === '/' && page.url.pathname === base)
 							? 'text-white'
 							: 'text-zinc-400'}"
 					>

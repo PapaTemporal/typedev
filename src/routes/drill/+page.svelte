@@ -1,6 +1,8 @@
 <script lang="ts">
 	import { goto, invalidateAll } from '$app/navigation';
+	import { base } from '$app/paths';
 	import PracticeSession from '$lib/components/PracticeSession.svelte';
+	import { api } from '$lib/data';
 	import { boardContext, resolveBoard } from '$lib/layouts/board';
 	import { settings } from '$lib/settings.svelte';
 	import type { SessionResult } from '$lib/typing/engine.svelte';
@@ -12,34 +14,31 @@
 		boardContext(resolveBoard(settings.board, settings.savedBoards)).layout
 	);
 
-	// The drill is generated server-side for the layout/board in the URL; if
-	// the active board's context differs, re-request with the right ones.
+	// The drill is generated for the layout/board in the URL; if the active
+	// board's context differs, re-request with the right ones.
 	$effect(() => {
 		if (data.layout !== layout || data.board !== settings.board) {
-			goto(`/drill?layout=${layout}&board=${encodeURIComponent(settings.board)}`, {
+			goto(`${base}/drill?layout=${layout}&board=${encodeURIComponent(settings.board)}`, {
 				replaceState: true
 			});
 		}
 	});
 
 	async function saveSession(result: SessionResult) {
-		await fetch('/api/sessions', {
-			method: 'POST',
-			headers: { 'content-type': 'application/json' },
-			body: JSON.stringify({
-				contentId: null,
-				kind: 'drill',
-				pageIndex: null,
-				wpm: result.wpm,
-				rawWpm: result.rawWpm,
-				accuracy: result.accuracy,
-				durationMs: result.durationMs,
-				charCount: result.charCount,
-				errorCount: result.errorCount,
-				layout,
-				board: settings.board,
-				charTally: [...result.charTally.entries()].map(([char, t]) => ({ char, ...t }))
-			})
+		await api.saveSession(fetch, {
+			contentId: null,
+			kind: 'drill',
+			pageIndex: null,
+			wpm: result.wpm,
+			rawWpm: result.rawWpm,
+			accuracy: result.accuracy,
+			durationMs: result.durationMs,
+			charCount: result.charCount,
+			errorCount: result.errorCount,
+			layout,
+			board: settings.board,
+			charTally: [...result.charTally.entries()].map(([char, t]) => ({ char, ...t })),
+			title: 'Drill'
 		});
 	}
 </script>

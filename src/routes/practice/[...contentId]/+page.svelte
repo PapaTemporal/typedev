@@ -1,5 +1,7 @@
 <script lang="ts">
+	import { base } from '$app/paths';
 	import PracticeSession from '$lib/components/PracticeSession.svelte';
+	import { api } from '$lib/data';
 	import { boardContext, resolveBoard } from '$lib/layouts/board';
 	import { settings } from '$lib/settings.svelte';
 	import type { SessionResult } from '$lib/typing/engine.svelte';
@@ -8,29 +10,27 @@
 	let { data }: PageProps = $props();
 
 	const isLastPage = $derived(data.pageIndex + 1 >= data.content.pageCount);
-	const nextHref = $derived(`/practice/${data.content.id}?page=${data.pageIndex + 1}`);
+	const nextHref = $derived(`${base}/practice/${data.content.id}?page=${data.pageIndex + 1}`);
 	const layout = $derived(
 		boardContext(resolveBoard(settings.board, settings.savedBoards)).layout
 	);
 
 	async function saveSession(result: SessionResult) {
-		await fetch('/api/sessions', {
-			method: 'POST',
-			headers: { 'content-type': 'application/json' },
-			body: JSON.stringify({
-				contentId: data.content.id,
-				kind: data.content.kind,
-				pageIndex: data.pageIndex,
-				wpm: result.wpm,
-				rawWpm: result.rawWpm,
-				accuracy: result.accuracy,
-				durationMs: result.durationMs,
-				charCount: result.charCount,
-				errorCount: result.errorCount,
-				layout,
-				board: settings.board,
-				charTally: [...result.charTally.entries()].map(([char, t]) => ({ char, ...t }))
-			})
+		await api.saveSession(fetch, {
+			contentId: data.content.id,
+			kind: data.content.kind,
+			pageIndex: data.pageIndex,
+			wpm: result.wpm,
+			rawWpm: result.rawWpm,
+			accuracy: result.accuracy,
+			durationMs: result.durationMs,
+			charCount: result.charCount,
+			errorCount: result.errorCount,
+			layout,
+			board: settings.board,
+			charTally: [...result.charTally.entries()].map(([char, t]) => ({ char, ...t })),
+			pageCount: data.content.pageCount,
+			title: data.content.title
 		});
 	}
 </script>
@@ -65,7 +65,7 @@
 				</a>
 			{:else}
 				<a
-					href="/"
+					href="{base}/"
 					class="rounded-md bg-emerald-600 px-4 py-2 text-sm font-medium text-white hover:bg-emerald-500"
 				>
 					Finished! Back to library

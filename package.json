@@ -13,6 +13,8 @@
 		"test": "vitest run",
 		"seed": "tsx scripts/seed.ts",
 		"books": "tsx scripts/fetch-books.ts",
+		"bake": "tsx scripts/bake-static-data.ts",
+		"build:static": "pnpm bake && STATIC_BUILD=1 vite build",
 		"db:generate": "drizzle-kit generate"
 	},
 	"devDependencies": {

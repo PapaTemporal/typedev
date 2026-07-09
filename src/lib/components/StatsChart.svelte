@@ -1,5 +1,5 @@
 <script lang="ts">
-	import type { DashboardSession } from '$lib/server/stats';
+	import type { DashboardSession } from '$lib/data';
 
 	let { sessions }: { sessions: DashboardSession[] } = $props();
 

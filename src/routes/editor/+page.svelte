@@ -1,5 +1,6 @@
 <script lang="ts">
 	import { goto } from "$app/navigation";
+	import { base } from "$app/paths";
 	import {
 		boardLayers,
 		codeOnLayer,
@@ -707,7 +708,7 @@
 	Tip: to fix a preset that doesn't match your board, load it above, rebind
 	the differing keys, and save — it becomes the active keyboard in the header.
 	<button
-		onclick={() => goto("/settings")}
+		onclick={() => goto(`${base}/settings`)}
 		class="underline hover:text-zinc-400">Back to settings</button
 	>
 </p>

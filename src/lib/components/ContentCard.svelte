@@ -1,9 +1,10 @@
 <script lang="ts">
-	import type { LibraryItem } from '$lib/server/content';
+	import { base } from '$app/paths';
+	import type { LibraryItem } from '$lib/data';
 
 	let { item }: { item: LibraryItem } = $props();
 
-	const href = $derived(`/practice/${item.id}?page=${item.resumePage ?? 0}`);
+	const href = $derived(`${base}/practice/${item.id}?page=${item.resumePage ?? 0}`);
 	const difficultyLabel = $derived(['', 'easy', 'medium', 'symbol-heavy'][item.difficulty] ?? '');
 </script>
 

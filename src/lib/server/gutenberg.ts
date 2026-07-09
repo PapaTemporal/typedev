@@ -1,14 +1,18 @@
-// Relative imports (not $lib) so scripts/fetch-books.ts can run this through tsx too.
+// Server-side Gutenberg fetching. Pure helpers live in $lib/import/gutenberg-text
+// so the static build and scripts can share them; re-exported for convenience.
+import {
+	GUTENBERG_MIRRORS,
+	GUTENDEX_SEARCH,
+	slugify,
+	stripBoilerplate,
+	type GutendexRawBook
+} from '../import/gutenberg-text';
 
-const MIRRORS = [
-	(id: number) => `https://www.gutenberg.org/cache/epub/${id}/pg${id}.txt`,
-	(id: number) => `https://gutenberg.pglaf.org/cache/epub/${id}/pg${id}.txt`,
-	(id: number) => `https://gutenberg.readingroo.ms/cache/epub/${id}/pg${id}.txt`
-];
+export { slugify, stripBoilerplate };
 
 export async function fetchGutenbergText(id: number): Promise<string> {
 	let lastError = 'no mirror tried';
-	for (const mirror of MIRRORS) {
+	for (const mirror of GUTENBERG_MIRRORS) {
 		const url = mirror(id);
 		try {
 			const res = await fetch(url, { signal: AbortSignal.timeout(30000) });
@@ -24,28 +28,6 @@ export async function fetchGutenbergText(id: number): Promise<string> {
 	throw new Error(lastError);
 }
 
-/** Cut the Gutenberg license header/footer, keeping only the book body. */
-export function stripBoilerplate(raw: string): string {
-	const lines = raw.split(/\r?\n/);
-	let start = 0;
-	let end = lines.length;
-	for (let i = 0; i < lines.length; i++) {
-		if (/^\s*\*{3}\s*START OF/i.test(lines[i])) start = i + 1;
-		if (/^\s*\*{3}\s*END OF/i.test(lines[i])) {
-			end = i;
-			break;
-		}
-	}
-	return lines.slice(start, end).join('\n').trim();
-}
-
-export function slugify(title: string): string {
-	return title
-		.toLowerCase()
-		.replace(/[^a-z0-9]+/g, '-')
-		.replace(/^-|-$/g, '');
-}
-
 export interface GutendexBook {
 	id: number;
 	title: string;
@@ -54,13 +36,9 @@ export interface GutendexBook {
 
 /** Search the Project Gutenberg catalog via the public Gutendex API. */
 export async function searchGutendex(query: string): Promise<GutendexBook[]> {
-	const res = await fetch(`https://gutendex.com/books?search=${encodeURIComponent(query)}`, {
-		signal: AbortSignal.timeout(15000)
-	});
+	const res = await fetch(GUTENDEX_SEARCH(query), { signal: AbortSignal.timeout(15000) });
 	if (!res.ok) throw new Error(`Catalog search failed (${res.status}). Try a Gutenberg URL instead.`);
-	const data = (await res.json()) as {
-		results?: { id: number; title: string; authors?: { name: string }[] }[];
-	};
+	const data = (await res.json()) as { results?: GutendexRawBook[] };
 	return (data.results ?? []).slice(0, 10).map((b) => ({
 		id: b.id,
 		title: b.title,
